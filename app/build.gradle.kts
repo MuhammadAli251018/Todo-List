@@ -1,11 +1,15 @@
+import org.gradle.jvm.toolchain.internal.JavaToolchain
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
+
     namespace = "online.muhammadali.todolist"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "online.muhammadali.todolist"
@@ -40,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -49,9 +53,11 @@ android {
     }
 }
 
+
+
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
@@ -72,10 +78,17 @@ dependencies {
 
 
     implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
     // optional - Test helpers
     testImplementation("androidx.room:room-testing:$room_version")
+
+    //  Truth
+    androidTestImplementation("com.google.truth:truth:1.1.4")
+    testImplementation("com.google.truth:truth:1.1.4")
+
+    //  Compose Constraint Layout
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 }
