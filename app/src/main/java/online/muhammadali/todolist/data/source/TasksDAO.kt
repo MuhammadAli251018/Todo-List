@@ -9,23 +9,25 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TasksDAO {
+    fun getAllTasks(): Flow<List<Task>>
 
-    @Query("SELECT * FROM task")
-    fun readAllTasks(): Flow<List<Task>>
+    suspend fun addNewTask(task: Task): Long
 
-    @Query("SELECT * FROM task WHERE listId LIKE :listId ")
-    fun readAllTasksInList(listId: Long): Flow<List<Task>>
+    suspend fun deleteTask(task: Task)
 
-    /** search for tasks content in the list*/
-    @Query("SELECT * FROM task WHERE listId LIKE :listId AND taskContent LIKE '%' || :content || '%'")
-    fun searchForTasksByContent(content: String, listId: Long): Flow<List<Task>>
+    suspend fun updateTask(task: Task)
 
-    @Delete
-    suspend fun deleteTask(taskId: Long): Result<Unit>
+    fun getTaskById(id: Long): Flow<Task>
 
-    @Update
-    suspend fun updateTask(task: Task): Result<Unit>
+    fun getAllTasksWithCommonParent(parentId: Long): Flow<List<Task>>
 
-    @Insert
-    suspend fun insertTask(task: Task): Result<Long>
+    fun getAllTasksWithCommonPriority(priorityLevel: Int): Flow<List<Task>>
+
+    fun getAllTasksWithCommonCompleteness(completeness: Float): Flow<List<Task>>
+
+    fun getAllNonCompletedTasks(): Flow<List<Task>>
+
+    fun searchInTaskTitle(keyWord: String): Flow<List<Task>>
+
+    fun searchInTaskDescription(keyWord: String): Flow<List<Task>>
 }

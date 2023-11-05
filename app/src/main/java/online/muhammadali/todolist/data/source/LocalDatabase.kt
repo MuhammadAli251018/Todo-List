@@ -1,8 +1,9 @@
 package online.muhammadali.todolist.data.source
 
 import androidx.room.Database
+import androidx.room.RoomDatabase
 
-@Database(entities = [TasksList::class], version = 1)
-abstract class ListDatabase {
-    abstract fun getDAO(): ListDAO
+@Database(entities = [Task::class], version = 2)
+abstract class LocalDatabase : RoomDatabase() {
+    abstract fun getTaskDAO(): TasksDAO
 }
