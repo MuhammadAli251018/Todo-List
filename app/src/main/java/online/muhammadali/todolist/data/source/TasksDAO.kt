@@ -41,4 +41,6 @@ interface TasksDAO {
 
     @Query("SELECT * FROM task WHERE description LIKE  '%' || :keyword || '%'")
     fun searchInTaskDescription(keyword: String): Flow<List<Task>>
+
+    //  todo add deleting tasks with it's subtasks
 }
