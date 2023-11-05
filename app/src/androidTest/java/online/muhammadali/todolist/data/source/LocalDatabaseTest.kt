@@ -1,12 +1,15 @@
 package online.muhammadali.todolist.data.source
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
-import org.junit.Before
+import online.muhammadali.todolist.util.TestExecutor
+import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
 
 infix fun Task.matches(otherTask: Task) =
@@ -16,13 +19,19 @@ infix fun Task.matches(otherTask: Task) =
     completeness == otherTask.completeness &&
     parentId == otherTask.parentId
 
-class LocalDatabaseTest {
+
+
+@RunWith(JUnit4::class)
+class LocalDatabaseTest : TestExecutor() {
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
 
     private lateinit var db: LocalDatabase
     private lateinit var dao: TasksDAO
 
-    @Before
-    fun setup() {
+    override fun setup() {
         db = Room.databaseBuilder(
             ApplicationProvider.getApplicationContext(),
             LocalDatabase::class.java,
@@ -32,6 +41,12 @@ class LocalDatabaseTest {
             .build()
 
         dao = db.getTaskDAO()
+
+    }
+
+    override suspend fun tearUp() {
+        dao.clearAllTasks()
+        db.close()
     }
 
 
@@ -44,7 +59,7 @@ class LocalDatabaseTest {
     )
 
     @Test
-    fun success_when_all_read_all_tasks() = runTest {
+    fun success_when_all_read_all_tasks() = executeTest {
         val id = dao.addNewTask(testTask)
         val tasks = dao.getAllTasks().first()
 
@@ -54,7 +69,7 @@ class LocalDatabaseTest {
 
     //  Can be a sub or parent task
     @Test
-    fun success_when_create_task() = runTest {
+    fun success_when_create_task() = executeTest {
         val id = dao.addNewTask(testTask)
         val task = dao.getTaskById(id).first()
 
@@ -62,28 +77,30 @@ class LocalDatabaseTest {
     }
 
     @Test
-    fun success_when_update_task() = runTest {
+    fun success_when_update_task() = executeTest {
         val id = dao.addNewTask(testTask)
         val task = dao.getTaskById(id).first().copy(title = "updated title")
 
-        dao.updateTask(task)
+        dao.updateTask(task.copy(taskId = id))
 
         assertThat(task matches testTask)
     }
 
     @Test
-    fun success_when_delete_task() = runTest {
+    fun success_when_delete_task() = executeTest {
         val id = dao.addNewTask(testTask)
-        dao.deleteTask(testTask)
+        dao.deleteTask(testTask.copy(taskId = id))
 
         val allTasks = dao.getAllTasks().first()
+
+        println("Result: $allTasks" )
 
         assertThat(allTasks.isEmpty()).isTrue()
 
     }
 
     @Test
-    fun success_when_read_all_tasks_with_common_parent_id() = runTest {
+    fun success_when_read_all_tasks_with_common_parent_id() = executeTest {
         val tasks = mutableListOf<Task>()
         for (i in 0 .. 3 ) {
 
@@ -91,8 +108,8 @@ class LocalDatabaseTest {
                 title = "task where id: $i",
                 parentId = if (i == 0) -1 else 0
             )
-            dao.addNewTask(task)
-            tasks.add(task)
+            val id = dao.addNewTask(task)
+            tasks.add(task.copy(taskId = id))
         }
 
         val tasksResult = dao.getAllTasksWithCommonParent(0L).first()
@@ -101,7 +118,7 @@ class LocalDatabaseTest {
 
 
     @Test
-    fun success_when_read_all_tasks_with_common_property() = runTest {
+    fun success_when_read_all_tasks_with_common_property() = executeTest {
         val tasks = mutableListOf<Task>()
         for (i in 0 .. 3 ) {
 
@@ -109,8 +126,8 @@ class LocalDatabaseTest {
                 title = "task where id: $i",
                 priority = if (i == 0) -1 else 0
             )
-            dao.addNewTask(task)
-            tasks.add(task)
+            val id = dao.addNewTask(task)
+            tasks.add(task.copy(taskId = id))
         }
 
         val tasksResult = dao.getAllTasksWithCommonPriority(0).first()
@@ -118,7 +135,7 @@ class LocalDatabaseTest {
     }
 
     @Test
-    fun success_when_read_all_completed_tests() = runTest {
+    fun success_when_read_all_completed_tests() = executeTest {
         val tasks = mutableListOf<Task>()
         for (i in 0 .. 3 ) {
 
@@ -126,55 +143,57 @@ class LocalDatabaseTest {
                 title = "task where id: $i",
                 completeness = if (i == 0) .05f else 0f
             )
-            dao.addNewTask(task)
-            tasks.add(task)
+            val id = dao.addNewTask(task)
+            tasks.add(task.copy(taskId = id))
         }
 
         val tasksResult = dao.getAllTasksWithCommonCompleteness(0f).first()
+
+        println("Given: $tasks")
+        println("Result: $tasksResult")
         assertThat(tasksResult.contains(tasks[1]) && tasks.contains(tasks[2]) && tasks.contains(tasks[3])).isTrue()
     }
 
     //  search in title
     @Test
-    fun success_when_search_in_title() = runTest {
+    fun success_when_search_in_title() = executeTest {
         val tasks = mutableListOf<Task>()
         val searchKeyword = "search key"
+
         val wantedTask = testTask.copy(
-            taskId = 7L,
-            title = searchKeyword
+            title = searchKeyword + "bla"
         )
 
         for (i in 0 .. 3 ) {
 
             val task = if (i == 0) wantedTask else testTask
 
-            dao.addNewTask(task)
-            tasks.add(task)
+            val id = dao.addNewTask(task)
+            tasks.add(task.copy(taskId = id))
         }
 
-        val tasksResult = dao.searchInTaskTitle(keyWord = searchKeyword).first()
+        val tasksResult = dao.searchInTaskTitle(keyword = searchKeyword).first()
         assertThat(tasksResult.size).isEqualTo(1)
         assertThat(tasksResult[0] matches wantedTask)
     }
 
     @Test
-    fun success_when_search_in_description() = runTest {
+    fun success_when_search_in_description() = executeTest {
         val tasks = mutableListOf<Task>()
         val searchKeyword = "search key"
         val wantedTask = testTask.copy(
-            taskId = 7L,
-            description = searchKeyword
+            description = searchKeyword + "bla"
         )
 
         for (i in 0 .. 3 ) {
 
             val task = if (i == 0) wantedTask else testTask
 
-            dao.addNewTask(task)
-            tasks.add(task)
+            val id = dao.addNewTask(task)
+            tasks.add(task.copy(taskId = id))
         }
 
-        val tasksResult = dao.searchInTaskTitle(keyWord = searchKeyword).first()
+        val tasksResult = dao.searchInTaskDescription(keyword = searchKeyword).first()
         assertThat(tasksResult.size).isEqualTo(1)
         assertThat(tasksResult[0] matches wantedTask)
     }

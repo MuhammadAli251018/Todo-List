@@ -91,4 +91,8 @@ dependencies {
 
     //  Compose Constraint Layout
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+
+    //  Testing
+    androidTestImplementation("androidx.arch.core:core-testing:2.1.0")
+
 }
