@@ -15,6 +15,7 @@ sealed class Result<T> {
 
         fun <T> success(data: T) = Success(data)
 
+        //  todo handle error don't make failure have a property of error
         fun <T>failure(exception: Throwable) = Failure<T>(exception)
     }
 

@@ -12,7 +12,7 @@ import kotlin.coroutines.CoroutineContext
 
 object Error {
 
-    fun <D>getResultDbOperation(operation: () -> D): Result<D> {
+    fun <D>getResultDbOperation (operation: () -> D): Result<D> {
         return try {
             Result.success(operation())
         }
@@ -21,14 +21,14 @@ object Error {
         }
     }
 
-    fun <D> getResultDbOperation(
+    fun <D> getResultDbOperationAsync (
+        scopeContext: CoroutineContext = Dispatchers.IO,
         operation: suspend () -> D,
-        scopeContext: CoroutineContext = Dispatchers.IO
     ): Flow<Result<D>> {
 
         val flow = MutableSharedFlow<Result<D>>()
 
-        CoroutineScope(scopeContext).launch {
+        CoroutineScope (scopeContext).launch {
             val handler = CoroutineExceptionHandler { coroutineContext, throwable ->
 
                 coroutineContext.cancel()
@@ -38,14 +38,13 @@ object Error {
                 }
             }
 
-            launch(scopeContext + handler) {
-                async {
+            launch (scopeContext + handler) {
+                flow.emit(Success(async {
                     operation()
-                }.await()
+                }.await()))
             }
         }
 
         return flow
     }
 }
-
