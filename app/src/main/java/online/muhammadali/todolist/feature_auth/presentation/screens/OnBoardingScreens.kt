@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,25 +20,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import online.muhammadali.todolist.R
 import online.muhammadali.todolist.common.presentation.components.FilledTextButton
 import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.ArhayakibreFontFamily
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
 
-@Composable
-fun OnBoardingScreen(
-    a: String
-    //  todo add the navigation controller & the viewmodel
-) {
-
-}
 
 //  stateless
 @Composable
 fun OnBoardingScreen(
-    onGetStartedClick: () -> Unit
+    navHostController: NavHostController
 ) {
+    val onGetStartedClick = {
+        //  TODO configure backstack
+        navHostController
+            .navigate(AuthScreen.LogIn.rout)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -97,9 +98,10 @@ fun OnBoardingScreen(
         FilledTextButton(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 20.dp),
+                .padding(horizontal = 30.dp),
             text = "Let's GetStarted",
             textSize = 16.sp,
+            innerPadding = PaddingValues(20.dp),
             onClick = onGetStartedClick
         )
     }
@@ -111,8 +113,6 @@ fun OnBoardingScreenPreview(
     //  todo add the navigation controller & the viewmodel
 ) {
     TodoListTheme {
-        OnBoardingScreen{
-
-        }
+        OnBoardingScreen(rememberNavController())
     }
 }

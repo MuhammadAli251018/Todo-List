@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
+import online.muhammadali.todolist.feature_auth.presentation.screens.AuthNavHost
 import online.muhammadali.todolist.feature_auth.presentation.screens.OnBoardingScreen
 
 class MainActivity : ComponentActivity() {
@@ -21,9 +23,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     //Greeting("Android")
-                    OnBoardingScreen {
-
-                    }
+                    AuthNavHost(navController = rememberNavController())
                 }
             }
         }

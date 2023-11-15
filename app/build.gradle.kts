@@ -4,6 +4,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -104,5 +106,17 @@ dependencies {
     // ViewModel utilities for Compose
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
 
+    //  Navigation
+    val nav_version = "2.7.5"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    //  Compose Lifecycle awareness
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
+
+    //  Hilt
+    implementation("com.google.dagger:hilt-android:2.44")
+    ksp("com.google.dagger:hilt-android-compiler:2.44")
+    ksp("com.google.dagger:dagger-compiler:2.44") // Dagger compiler
+    ksp("com.google.dagger:hilt-compiler:2.44")   // Hilt compiler
 
 }

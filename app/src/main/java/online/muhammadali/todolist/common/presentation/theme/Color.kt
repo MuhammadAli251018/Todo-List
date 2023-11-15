@@ -13,3 +13,5 @@ val Pink40 = Color(0xFF7D5260)
 val DarkBlue = Color(0xFF212832)
 val LightBlue = Color(0xFF455A64)
 val DarkYellow = Color(0xFFFED36A)
+val DarkWhite = Color.White.copy(alpha = 0.75f)
+val ErrorColor = Color.Red
