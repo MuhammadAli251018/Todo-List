@@ -9,9 +9,7 @@ import online.muhammadali.todolist.feature_auth.presentation.viewmodel.LogInView
 import online.muhammadali.todolist.feature_auth.presentation.viewmodel.SignUpViewModel
 
 enum class AuthScreen (val rout: String) {
-    OnBoarding("on_boarding"),
-    LogIn("log_in"),
-    SignUp("sign_up"),
+    OnBoarding("on_boarding")
 }
 
 @Composable
@@ -23,23 +21,7 @@ fun AuthNavHost(
         startDestination = AuthScreen.OnBoarding.rout
     ) {
         composable(AuthScreen.OnBoarding.rout) {
-            OnBoardingScreen(navHostController = navController)
-        }
-
-        composable(AuthScreen.LogIn.rout) {
-            val viewModel = viewModel<LogInViewModel>()
-            LoginScreen(
-                viewModel = viewModel,
-                navHostController = navController
-            )
-        }
-
-        composable(AuthScreen.SignUp.rout) {
-            val viewModel = viewModel<SignUpViewModel>()
-            SignUpScreen(
-                viewModel = viewModel,
-                navHostController = navController
-            )
+            OnBoardingScreen(navHostController = navController) {/*Todo: Add a view model here*/}
         }
     }
 }

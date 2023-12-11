@@ -119,4 +119,8 @@ dependencies {
     ksp("com.google.dagger:dagger-compiler:2.44") // Dagger compiler
     ksp("com.google.dagger:hilt-compiler:2.44")   // Hilt compiler
 
+    //  Coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+
 }

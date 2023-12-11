@@ -22,6 +22,8 @@ val Typography = Typography(
 val ArhayakibreFontBold = Font(R.font.abhayakibre_bold)
 val ArhayakibreFontRegular = Font(R.font.abhayalibre_regular)
 
+val a = FontFamily
+
 val ArhayakibreFontFamily = FontFamily(
     listOf(ArhayakibreFontBold, ArhayakibreFontRegular)
 )

@@ -24,6 +24,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import online.muhammadali.todolist.R
 import online.muhammadali.todolist.common.presentation.components.FilledTextButton
+import online.muhammadali.todolist.common.presentation.components.StrokeButtonWithIcon
 import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.ArhayakibreFontFamily
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
@@ -32,13 +33,14 @@ import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
 //  stateless
 @Composable
 fun OnBoardingScreen(
-    navHostController: NavHostController
+    navHostController: NavHostController,
+    onLoginWithGoogle: () -> Unit
 ) {
-    val onGetStartedClick = {
+    /*val onGetStartedClick = {
         //  TODO configure backstack
         navHostController
             .navigate(AuthScreen.LogIn.rout)
-    }
+    }*/
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +51,7 @@ fun OnBoardingScreen(
         VerticalSpace(height = 20.dp)
 
         Image(
-            painter = painterResource(id = R.drawable.ic_done),
+            painter = painterResource(id = R.drawable.done_ic),
             contentDescription = "Done Logo"
         )
 
@@ -93,16 +95,19 @@ fun OnBoardingScreen(
 
         }
 
-        VerticalSpace(height = 20.dp)
+        VerticalSpace(height = 30.dp)
 
-        FilledTextButton(
+        StrokeButtonWithIcon(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp),
-            text = "Let's GetStarted",
-            textSize = 16.sp,
-            innerPadding = PaddingValues(20.dp),
-            onClick = onGetStartedClick
+                .padding(horizontal = 30.dp)
+                .fillMaxWidth(),
+            text = "Continue with Google",
+            textSize = 18.sp,
+            iconDescription = "Google",
+            icon = painterResource(id = R.drawable.google),
+            iconSize = 25.dp,
+            iconColor = Color.White,
+            onClick = onLoginWithGoogle
         )
     }
 }
@@ -113,6 +118,6 @@ fun OnBoardingScreenPreview(
     //  todo add the navigation controller & the viewmodel
 ) {
     TodoListTheme {
-        OnBoardingScreen(rememberNavController())
+        OnBoardingScreen(rememberNavController()) {}
     }
 }

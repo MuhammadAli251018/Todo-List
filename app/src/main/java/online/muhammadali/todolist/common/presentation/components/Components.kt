@@ -147,7 +147,7 @@ data class TextFieldIcon(
 @Composable
 fun TextFieldWithIcon(
     modifier: Modifier = Modifier,
-    label: String,
+    label: String?,
     text: String,
     textFontSize: TextUnit,
     labelFontSize: TextUnit,
@@ -161,11 +161,13 @@ fun TextFieldWithIcon(
     Column (
         modifier = modifier
     ){
-        Text(
-            text = label,
-            color = labelTextColor,
-            fontSize = labelFontSize
-        )
+
+        if (label != null)
+            Text(
+                text = label,
+                color = labelTextColor,
+                fontSize = labelFontSize
+            )
 
         Spacer(modifier = Modifier.height(15.dp))
 
