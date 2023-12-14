@@ -1,34 +1,13 @@
 package online.muhammadali.todolist.feature_main.presentation.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import online.muhammadali.todolist.R
-import online.muhammadali.todolist.feature_main.presentation.components.ParentTaskState
-import online.muhammadali.todolist.feature_main.presentation.components.TaskState
-import online.muhammadali.todolist.feature_main.presentation.components.TasksList
+import online.muhammadali.todolist.feature_main.presentation.components.TaskItemState
 
 //todo add a edit button to edit the task
 
@@ -45,12 +24,12 @@ fun TaskContentScreen(
     desFontSize: TextUnit,
     desFontWeight: FontWeight,
     desFontColor: Color,
-    subtasksState: List<TaskState>,
+    subtasksState: List<TaskItemState>,
     onSubtaskClicked: (Int) -> Unit,
     onSubtaskSelected: (Int) -> Unit,
     onSubtaskChecked: (Int, Boolean) -> Unit,
     onAddSubtask: () -> Unit
-) {
+) {/*
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -128,14 +107,14 @@ fun TaskContentScreen(
                 onSubtaskChecked
             )
         }
-    }
+    }*/
 }
 
 
 @Preview(showBackground = true)
 @Composable
 fun TaskContentScreenPreview() {
-    val prototypeList = mutableListOf<ParentTaskState>()
+    /*val prototypeList = mutableListOf<ParentTaskState>()
     val parentTaskState = ParentTaskState(
         modifier = Modifier,
         taskTitle = "Test Task",
@@ -170,5 +149,5 @@ fun TaskContentScreenPreview() {
         onSubtaskChecked = {_,_ -> }
     ) {
         
-    }
+    }*/
 }
