@@ -147,8 +147,10 @@ data class TextFieldIcon(
 @Composable
 fun TextFieldWithIcon(
     modifier: Modifier = Modifier,
-    label: String,
+    label: String?,
     text: String,
+    placeholderText: String? = null,
+    backgroundColor: Color = MaterialTheme.colorScheme.secondary,
     textFontSize: TextUnit,
     labelFontSize: TextUnit,
     labelTextColor: Color = Color.White.copy(alpha = 0.7f),
@@ -161,11 +163,13 @@ fun TextFieldWithIcon(
     Column (
         modifier = modifier
     ){
-        Text(
-            text = label,
-            color = labelTextColor,
-            fontSize = labelFontSize
-        )
+
+        if (label != null)
+            Text(
+                text = label,
+                color = labelTextColor,
+                fontSize = labelFontSize
+            )
 
         Spacer(modifier = Modifier.height(15.dp))
 
@@ -207,11 +211,14 @@ fun TextFieldWithIcon(
                 null,
             keyboardOptions = keyboardOptions,
             colors = TextFieldDefaults.textFieldColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
+                containerColor = backgroundColor,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
+            placeholder = if (placeholderText != null){
+                @Composable { Text(text = placeholderText) }
+            } else null,
             onValueChange = onValueChange
         )
     }
@@ -333,7 +340,7 @@ fun PasswordTextField(
             trailingIcon = {
                     Icon(
                         modifier = Modifier
-                            .clickable (onClick = onShowPasswordClicked)
+                            .clickable(onClick = onShowPasswordClicked)
                             .size(25.dp),
                         painter = if (showPassword)
                             painterResource(id = R.drawable.eye)

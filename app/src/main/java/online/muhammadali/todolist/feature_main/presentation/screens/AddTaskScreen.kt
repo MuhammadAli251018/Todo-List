@@ -29,7 +29,7 @@ fun AddTaskScreen(
     priorityTagColor: Color,
     priorityTagHeight: Dp,
     innerPaddingValues: PaddingValues
-) {
+) {/*
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -111,7 +111,7 @@ fun AddTaskScreen(
             //  todo implement priority selector
 
         }
-    }
+    }*/
 }
 
 @Preview(showBackground = true)
