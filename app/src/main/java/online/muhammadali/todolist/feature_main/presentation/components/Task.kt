@@ -59,18 +59,17 @@ import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
 
 @Composable
 fun TasksColumn(
-    projectStates: List<ProjectState>,
+    tasksState: List<TaskItemState>,
     onItemClick: (Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         contentPadding = PaddingValues(horizontal = 10.dp)
     ) {
-        itemsIndexed(projectStates) {index, state ->
-            ProjectItem(
-                projectState = state.copy(
-                    modifier = state.modifier.fillMaxWidth()
-                )
+        itemsIndexed(tasksState) {index, state ->
+            TaskItem(
+                modifier = Modifier,
+                taskState = state
             ) {
                 onItemClick(index)
             }
