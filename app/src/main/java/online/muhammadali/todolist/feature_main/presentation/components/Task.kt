@@ -60,19 +60,25 @@ import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
 @Composable
 fun TasksColumn(
     tasksState: List<TaskItemState>,
-    onItemClick: (Int) -> Unit
+    onItemClick: (Int) -> Unit,
+    onTaskCompleted: (Int) -> Unit
 ) {
     LazyColumn(
-        modifier = Modifier.background(MaterialTheme.colorScheme.background),
+        modifier = Modifier.background(Color.Transparent/*MaterialTheme.colorScheme.background*/),
         contentPadding = PaddingValues(horizontal = 10.dp)
     ) {
         itemsIndexed(tasksState) {index, state ->
             TaskItem(
-                modifier = Modifier,
-                taskState = state
-            ) {
-                onItemClick(index)
-            }
+                modifier = Modifier
+                    .padding(vertical = 5.dp),
+                taskState = state,
+                onCompletedClick = {
+                    onTaskCompleted(index)
+                },
+                onTaskClick = {
+                    onItemClick(index)
+                }
+            )
         }
     }
 }
@@ -101,7 +107,7 @@ data class TasksFilterState(
     val searchKeyword: SearchKeyWord
 )
 
-private val initialFilterState = TasksFilterState(
+val initialFilterState = TasksFilterState(
     showCompleted = true,
     showUncompleted = true,
     searchKeyword = SearchKeyWord.Empty
@@ -127,7 +133,12 @@ fun TasksFilter(
                 .fillMaxWidth()
                 .padding(horizontal = 5.dp)
         ) {
+
+            VerticalSpace(height = 10.dp)
+
+
             TextFieldWithIcon(
+                modifier = Modifier.padding(horizontal = 5.dp),
                 label = null,
                 text = "",
                 backgroundColor = MaterialTheme.colorScheme.background,
@@ -246,31 +257,6 @@ private fun ExpandedFilter (
     }
 
 }
-
-/*
-@Composable
-fun RowRadioGroup(
-
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "Show completed tasks",
-            color = DarkWhite,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold
-        )
-
-        RadioButton(
-            selected = ,
-            onClick = { /*TODO*/ }
-        )
-    }
-}
-
- */
-
 @Composable
 private fun UnexpandedFilter(
     modifier: Modifier
@@ -308,7 +294,7 @@ private val completedState
     @Composable get() =
     TaskItemDecorationState(
         fontColor = Color.White,
-        backgroundColor = MaterialTheme.colorScheme.background,
+        backgroundColor = MaterialTheme.colorScheme.secondary,
         circleColor = MaterialTheme.colorScheme.primary,
         textStyle = TextStyle(textDecoration = TextDecoration.LineThrough)
     )
@@ -335,8 +321,8 @@ val previewTaskState = TaskItemState(
 fun TaskItem(
     modifier: Modifier,
     taskState: TaskItemState,
-    onClick: () -> Unit,
-    //onLongClick: () -> Unit
+    onTaskClick: () -> Unit,
+    onCompletedClick: () -> Unit
 ) {
 
     val decorationState = if (taskState.completed) completedState else uncompletedState
@@ -351,7 +337,8 @@ fun TaskItem(
         backgroundColor = decorationState.backgroundColor,
         textStyle = decorationState.textStyle,
         circleColor = decorationState.circleColor,
-        onClick = onClick,
+        onTaskClick = onTaskClick,
+        onCompletedClick = onCompletedClick
     )
 }
 
@@ -369,17 +356,18 @@ fun TaskItem(
     textStyle: TextStyle,
     //Todo: add -> date: String,
     //completeness: Float,
-    onClick: () -> Unit,
+    onTaskClick: () -> Unit,
+    onCompletedClick: () -> Unit
 ) {
     //  todo complete
     Card (
         modifier = modifier
             .combinedClickable(
-                onClick = onClick,
+                onClick = onTaskClick,
             ),
         shape = RectangleShape,
         colors = CardDefaults.cardColors(
-            contentColor = backgroundColor
+            containerColor = backgroundColor
         )
     ) {
         Box (
@@ -414,7 +402,7 @@ fun TaskItem(
                             end.linkTo(parent.end)
                             centerVerticallyTo(parent)
                         }
-                        .clickable(onClick = onClick),
+                        .clickable(onClick = onCompletedClick),
                     shape = CircleShape,
                     colors = CardDefaults.cardColors(
                         containerColor = circleColor
