@@ -115,8 +115,9 @@ fun DaysRow(
 fun CalendarSubScreen(
     days: List<DayState>,
     tasks: List<TaskItemState>,
-    month: String,
+    history: String,
     onDayClick: (Int) -> Unit,
+    onHistoryClick: () -> Unit,
     onTaskCompleted: (Int) -> Unit,
     onTaskClicked: (Int) -> Unit
 ) {
@@ -129,10 +130,9 @@ fun CalendarSubScreen(
 
         VerticalSpace(height = 50.dp)
 
-        // TODO: Use alert dialog to choose the month and the year
-
         Text (
-            text = month,
+            modifier = Modifier.clickable(onClick = onHistoryClick),
+            text = history,
             fontSize = 20.sp,
             color = DarkWhite,
             fontWeight = FontWeight.Normal
@@ -192,7 +192,7 @@ fun CalendarPreview() {
             days = days,
             tasks = tasks,
             "November",
-            {},{}, {}
+            {},{}, {}, {}
         )
     }
 }
