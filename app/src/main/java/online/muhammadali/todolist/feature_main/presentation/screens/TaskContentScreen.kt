@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,8 +23,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import online.muhammadali.todolist.R
@@ -33,13 +31,14 @@ import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.ArhayakibreFontFamily
 import online.muhammadali.todolist.common.presentation.theme.DarkWhite
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
-import online.muhammadali.todolist.feature_main.presentation.components.TaskItemState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskContentScreen(
     taskTitle: String,
     taskDate: String,
-    taskDescription: String
+    taskDescription: String,
+    onEditTaskClick: () -> Unit
 ) {
     Column (
         modifier = Modifier
@@ -153,7 +152,8 @@ fun TaskContentScreen(
                         shape = RectangleShape,
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.primary
-                        )
+                        ),
+                        onClick = onEditTaskClick
                     ) {
                         Box(
                             modifier = Modifier
@@ -172,8 +172,6 @@ fun TaskContentScreen(
                 }
             }
         }
-
-
     }
 
 }
@@ -187,6 +185,6 @@ fun TaskContentScreenPreview() {
             taskTitle = "Play Toda",
             taskDate = "20 June",
             taskDescription = "don't worry don't worry don't worry don't worry don't worry don't worry don't worry "
-        )
+        ) {}
     }
 }
