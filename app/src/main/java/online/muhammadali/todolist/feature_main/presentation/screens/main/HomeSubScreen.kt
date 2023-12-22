@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import online.muhammadali.todolist.R
 import online.muhammadali.todolist.common.presentation.components.HorizontalSpace
 import online.muhammadali.todolist.common.presentation.components.VerticalSpace
@@ -32,6 +34,27 @@ import online.muhammadali.todolist.feature_main.presentation.components.TasksCol
 import online.muhammadali.todolist.feature_main.presentation.components.TasksFilter
 import online.muhammadali.todolist.feature_main.presentation.components.TasksFilterState
 import online.muhammadali.todolist.feature_main.presentation.components.initialFilterState
+import online.muhammadali.todolist.feature_main.presentation.viewmodel.controller.HomeSController
+
+@Composable
+fun HomeSubScreen(
+    stateController: HomeSController
+) {
+
+    val tasks by stateController.tasksList.collectAsStateWithLifecycle(initialValue = emptyList())
+    val filterState by stateController.filterState.collectAsStateWithLifecycle(initialValue = initialFilterState)
+
+    HomeSubScreen(
+        userNameImmutable = stateController.userName,
+        userImagePainter = stateController.userImagePainter,
+        tasksList = tasks,
+        filterState = filterState,
+        onUserProfileClick = stateController::onUserProfileClick,
+        onFilterStateChange = stateController::onFilterStateChange,
+        onTaskItemClick = stateController::onTaskItemClick,
+        onCompletedTask = stateController::onCompleteTask
+    )
+}
 
 // stateless screen composable
 @Composable

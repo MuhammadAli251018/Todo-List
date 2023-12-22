@@ -12,13 +12,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,8 +37,27 @@ import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.ArhayakibreFontFamily
 import online.muhammadali.todolist.common.presentation.theme.DarkWhite
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
+import online.muhammadali.todolist.feature_main.presentation.viewmodel.controller.TaskContentSController
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddTaskScreen(
+    stateController: TaskContentSController
+) {
+    val taskTitle by stateController.taskTitle.collectAsState(initial = "")
+    val date by stateController.taskDate.collectAsState(initial = "")
+    val taskDescription by stateController.taskDescription.collectAsState(initial = "")
+
+    AddTaskScreen(
+        date = date,
+        taskTitle = taskTitle,
+        taskDetails = taskDescription,
+        onTitleChange = stateController::onTitleChange,
+        onDescriptionChange = stateController::onDescriptionChange,
+        onDateClick = { /*TODO*/ },
+        onCreateButtonClick = stateController::onSaveTask
+    )
+}
+
 @Composable
 fun AddTaskScreen(
     date: String,
@@ -61,7 +81,7 @@ fun AddTaskScreen(
                 .padding(horizontal = 30.dp),
             fontSize = 30.sp,
             color = DarkWhite,
-            text = "Create new Task",
+            text = "Task Details",
             fontFamily = ArhayakibreFontFamily,
             fontWeight = FontWeight.Bold
         )
@@ -172,11 +192,12 @@ fun AddTaskScreen(
             ),
             shape = RectangleShape,
             singleLine = false,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.secondary,
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
+                disabledIndicatorColor = Color.Transparent,
             ),
             placeholder =
                 @Composable { Text(text = "placeholderText") },
@@ -217,7 +238,7 @@ fun AddTaskScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "Edit Task",
+                                text = "Save",
                                 color = Color.Black,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold

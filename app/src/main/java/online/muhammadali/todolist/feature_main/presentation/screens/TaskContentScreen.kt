@@ -16,6 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,14 +33,32 @@ import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.ArhayakibreFontFamily
 import online.muhammadali.todolist.common.presentation.theme.DarkWhite
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
+import online.muhammadali.todolist.feature_main.presentation.viewmodel.controller.TaskContentSController
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TaskContentScreen(
+    stateController: TaskContentSController
+) {
+    val taskTitle by stateController.taskTitle.collectAsState(initial = "")
+    val date by stateController.taskDate.collectAsState(initial = "")
+    val taskDescription by stateController.taskDescription.collectAsState(initial = "")
+
+    TaskContentScreen(
+        taskTitle = taskTitle,
+        taskDate = date,
+        taskDescription = taskDescription,
+        onEditTaskClick = stateController::onEditTaskClick,
+        onDeleteTask = {/*todo*/}
+    )
+}
 @Composable
 fun TaskContentScreen(
     taskTitle: String,
     taskDate: String,
     taskDescription: String,
-    onEditTaskClick: () -> Unit
+    onEditTaskClick: () -> Unit,
+    // should view a confirmation before deleting
+    onDeleteTask: () -> Unit
 ) {
     Column (
         modifier = Modifier
@@ -184,7 +204,8 @@ fun TaskContentScreenPreview() {
         TaskContentScreen(
             taskTitle = "Play Toda",
             taskDate = "20 June",
-            taskDescription = "don't worry don't worry don't worry don't worry don't worry don't worry don't worry "
+            taskDescription = "don't worry don't worry don't worry don't worry don't worry don't worry don't worry ",
+            {}
         ) {}
     }
 }

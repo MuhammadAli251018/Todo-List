@@ -14,6 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,12 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.DarkWhite
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
 import online.muhammadali.todolist.feature_main.presentation.components.TaskItemState
 import online.muhammadali.todolist.feature_main.presentation.components.TasksColumn
 import online.muhammadali.todolist.feature_main.presentation.components.previewTaskState
+import online.muhammadali.todolist.feature_main.presentation.viewmodel.controller.CalendarSController
 
 data class DayState(
     val dayOfMonth: Int,
@@ -108,6 +111,26 @@ fun DaysRow(
             }
         }
     }
+}
+
+@Composable
+fun CalendarSubScreen(
+    stateController: CalendarSController
+) {
+
+    val days by stateController.days.collectAsStateWithLifecycle(initialValue = emptyList())
+    val tasks by stateController.tasks.collectAsStateWithLifecycle(initialValue = emptyList())
+    val history by stateController.history.collectAsStateWithLifecycle(initialValue = "")
+
+    CalendarSubScreen(
+        days = days,
+        tasks = tasks,
+        history = history,
+        onDayClick = stateController::onDayClick,
+        onHistoryClick = { /*TODO*/ },
+        onTaskCompleted = stateController::onTaskCompleted,
+        onTaskClicked = stateController::onTaskClicked
+    )
 }
 
 // stateless Calendar composable
