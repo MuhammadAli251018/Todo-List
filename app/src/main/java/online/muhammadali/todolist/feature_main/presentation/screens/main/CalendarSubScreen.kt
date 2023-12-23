@@ -15,6 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.DarkWhite
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
+import online.muhammadali.todolist.feature_main.presentation.components.DatePickerDialog
 import online.muhammadali.todolist.feature_main.presentation.components.TaskItemState
 import online.muhammadali.todolist.feature_main.presentation.components.TasksColumn
 import online.muhammadali.todolist.feature_main.presentation.components.previewTaskState
@@ -121,13 +125,22 @@ fun CalendarSubScreen(
     val days by stateController.days.collectAsStateWithLifecycle(initialValue = emptyList())
     val tasks by stateController.tasks.collectAsStateWithLifecycle(initialValue = emptyList())
     val history by stateController.history.collectAsStateWithLifecycle(initialValue = "")
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    DatePickerDialog(
+        modifier = Modifier.padding(horizontal = 5.dp),
+        onDateSelected = stateController::onHistoryChange,
+        onDismiss = {
+            showDatePicker = false
+        }
+    )
 
     CalendarSubScreen(
         days = days,
         tasks = tasks,
         history = history,
         onDayClick = stateController::onDayClick,
-        onHistoryClick = { /*TODO*/ },
+        onHistoryClick = { showDatePicker = true },
         onTaskCompleted = stateController::onTaskCompleted,
         onTaskClicked = stateController::onTaskClicked
     )

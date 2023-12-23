@@ -20,6 +20,9 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,6 +40,7 @@ import online.muhammadali.todolist.common.presentation.components.VerticalSpace
 import online.muhammadali.todolist.common.presentation.theme.ArhayakibreFontFamily
 import online.muhammadali.todolist.common.presentation.theme.DarkWhite
 import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
+import online.muhammadali.todolist.feature_main.presentation.components.DatePickerDialog
 import online.muhammadali.todolist.feature_main.presentation.viewmodel.controller.TaskContentSController
 
 @Composable
@@ -46,6 +50,15 @@ fun AddTaskScreen(
     val taskTitle by stateController.taskTitle.collectAsState(initial = "")
     val date by stateController.taskDate.collectAsState(initial = "")
     val taskDescription by stateController.taskDescription.collectAsState(initial = "")
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    DatePickerDialog(
+        modifier = Modifier.padding(horizontal = 5.dp),
+        onDateSelected = stateController::onHistoryChange,
+        onDismiss = {
+            showDatePicker = false
+        }
+    )
 
     AddTaskScreen(
         date = date,
@@ -53,7 +66,7 @@ fun AddTaskScreen(
         taskDetails = taskDescription,
         onTitleChange = stateController::onTitleChange,
         onDescriptionChange = stateController::onDescriptionChange,
-        onDateClick = { /*TODO*/ },
+        onDateClick = { showDatePicker = true },
         onCreateButtonClick = stateController::onSaveTask
     )
 }

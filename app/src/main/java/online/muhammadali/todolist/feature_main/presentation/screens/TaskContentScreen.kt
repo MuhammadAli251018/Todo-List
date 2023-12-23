@@ -9,15 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,19 +41,70 @@ import online.muhammadali.todolist.common.presentation.theme.TodoListTheme
 import online.muhammadali.todolist.feature_main.presentation.viewmodel.controller.TaskContentSController
 
 @Composable
+fun ConfirmDeleteDialog(
+    modifier: Modifier = Modifier,
+    showState: Boolean,
+    onDeleteTask: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    if (showState){
+        AlertDialog(
+            modifier = modifier,
+            onDismissRequest = onDismiss,
+            confirmButton = {
+                Button(
+                    onClick = onDeleteTask,
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(text = "Delete")
+                }
+            },
+            shape = RectangleShape,
+            containerColor = MaterialTheme.colorScheme.secondary,
+            text = { Text(text = "Delete the Task?") },
+            dismissButton = {
+                Button(
+                    onClick = onDismiss,
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Text(text = "Keep it")
+                }
+            }
+        )
+    }
+}
+
+@Composable
 fun TaskContentScreen(
     stateController: TaskContentSController
 ) {
     val taskTitle by stateController.taskTitle.collectAsState(initial = "")
     val date by stateController.taskDate.collectAsState(initial = "")
     val taskDescription by stateController.taskDescription.collectAsState(initial = "")
+    var showDatePicker by remember { mutableStateOf(false) }
+
+    ConfirmDeleteDialog(
+        showState = showDatePicker,
+        onDeleteTask = stateController::onDeleteTask,
+        onDismiss = {
+            showDatePicker = false
+        }
+    )
 
     TaskContentScreen(
         taskTitle = taskTitle,
         taskDate = date,
         taskDescription = taskDescription,
         onEditTaskClick = stateController::onEditTaskClick,
-        onDeleteTask = {/*todo*/}
+        onDeleteTask = {
+            showDatePicker = true
+        }
     )
 }
 @Composable
@@ -57,7 +113,6 @@ fun TaskContentScreen(
     taskDate: String,
     taskDescription: String,
     onEditTaskClick: () -> Unit,
-    // should view a confirmation before deleting
     onDeleteTask: () -> Unit
 ) {
     Column (
@@ -161,14 +216,43 @@ fun TaskContentScreen(
                     containerColor = MaterialTheme.colorScheme.secondary
                 )
             ) {
-                Box (
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Card(
                         modifier = Modifier
-                            .padding(vertical = 30.dp)
-                            .fillMaxWidth(0.8f),
+                            .fillMaxWidth(0.8f)
+                            .weight(1f)
+                            .padding(vertical = 30.dp, horizontal = 10.dp),
+                        shape = RectangleShape,
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.Red.copy(alpha = 0.45f)
+                        ),
+                        onClick = onDeleteTask
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 15.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Delete",
+                                color = Color.Black,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth(0.8f)
+                            .weight(1f)
+                            .padding(vertical = 30.dp, horizontal = 10.dp),
                         shape = RectangleShape,
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.primary
